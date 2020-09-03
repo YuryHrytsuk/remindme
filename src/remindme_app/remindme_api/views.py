@@ -1,5 +1,8 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, serializers as drf_serializers
+from rest_framework.decorators import action
 
 from . import serializers
 from . import models
@@ -10,9 +13,27 @@ class ReminderViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        return self.get_reminders_by_author()
+
+    def get_reminders_by_author(self):
         return models.Reminder.objects \
             .filter(author=self.request.user) \
             .order_by('occurs_at')
+
+    def get_reminders_including_author(self):
+        return models.Reminder.objects \
+            .filter(cc_recipients__id=self.request.user.id) \
+            .order_by('occurs_at')
+
+    def list(self, request, *args, **kwargs):
+        if "cc" in request.query_params:
+            with patch.object(self, "get_queryset", self.get_reminders_including_author):
+                result = super().list(request, *args, **kwargs)
+
+        else:
+            result = super().list(request, *args, **kwargs)
+
+        return result
 
 
 class CreateUserView(viewsets.ModelViewSet):

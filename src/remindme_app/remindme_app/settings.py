@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["0.0.0.0"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -131,3 +130,11 @@ STATIC_URL = '/static/'
 
 CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
 CELERY_RESULT_BACKEND = "django-db"
+
+# Email
+
+EMAIL_HOST = os.environ["EMAIL_HOST"]
+EMAIL_PORT = os.environ["EMAIL_PORT"]
+EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+EMAIL_USE_TLS = os.environ["EMAIL_USE_TLS"]

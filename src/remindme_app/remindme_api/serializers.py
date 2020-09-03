@@ -12,7 +12,7 @@ class ReminderSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, *args, **kwargs):
         reminder = super().create(*args, **kwargs)
-        tasks.show_reminders.delay()
+        tasks.send_reminder.s(reminder.id).apply_async(eta=reminder.occurs_at)
         return reminder
 
 

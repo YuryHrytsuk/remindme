@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from . import views
-import rest_framework.urls
+
 router = routers.DefaultRouter()
 router.register(r'reminders', views.ReminderViewSet, basename="reminder")
 router.register(r'users', views.CreateUserView, basename="user")
