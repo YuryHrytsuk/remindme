@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["0.0.0.0"]
 INSTALLED_APPS = [
     'remindme_api.apps.RemindmeApiConfig',
     'rest_framework',
+    'django_celery_results',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

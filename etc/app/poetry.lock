@@ -95,6 +95,17 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 category = "main"
+description = "Celery result backends for Django."
+name = "django-celery-results"
+optional = false
+python-versions = "*"
+version = "1.2.1"
+
+[package.dependencies]
+celery = ">=4.4,<5.0"
+
+[[package]]
+category = "main"
 description = "Web APIs for Django, made easy."
 name = "djangorestframework"
 optional = false
@@ -164,7 +175,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.3.0"
 
 [metadata]
-content-hash = "f3352336496718af750a9b2dcd1e23e2403a4e19f3e600a5ae54823431ac92ae"
+content-hash = "60f7123eee7c256c6080958a510488b0d145d039bfe632fcf05b701c7f524b17"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -187,6 +198,10 @@ celery = [
 django = [
     {file = "Django-3.1.1-py3-none-any.whl", hash = "sha256:b5fbb818e751f660fa2d576d9f40c34a4c615c8b48dd383f5216e609f383371f"},
     {file = "Django-3.1.1.tar.gz", hash = "sha256:59c8125ca873ed3bdae9c12b146fbbd6ed8d0f743e4cf5f5817af50c51f1fc2f"},
+]
+django-celery-results = [
+    {file = "django_celery_results-1.2.1-py2.py3-none-any.whl", hash = "sha256:a29ab580f0e38c66c39f51cc426bbdbb2a391b8cc0867df9dea748db2c961db2"},
+    {file = "django_celery_results-1.2.1.tar.gz", hash = "sha256:e390f70cc43bbc2cd7c8e4607dc29ab6211a2ab968f93677583f0160921f670c"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.11.1-py3-none-any.whl", hash = "sha256:8b1ac62c581dbc5799b03e535854b92fc4053ecfe74bad3f9c05782063d4196b"},

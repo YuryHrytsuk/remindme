@@ -10,6 +10,7 @@ services:
             - ./etc/db/.env
         depends_on:
             - db
+            - rabbitmq
         networks:
             - remindme
         ports:
@@ -29,6 +30,25 @@ services:
             - 10432:5432
         networks:
             - remindme
+
+    celery:
+        build:
+            context: .
+            dockerfile: ./etc/app/Dockerfile
+        command: celery -A remindme_app worker -l info
+        env_file:
+            - ./etc/app/.env
+            - ./etc/db/.env
+        depends_on:
+            - app
+            - db
+            - rabbitmq
+        networks:
+            - remindme
+        volumes:
+            - ./src/remindme_app:/app/remindme_app
+            - ./etc/app/pyproject.toml:/app/pyproject.toml
+            - ./etc/app/poetry.lock:/app/poetry.lock
 
     rabbitmq:
         image: rabbitmq:alpine
