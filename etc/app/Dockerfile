@@ -17,7 +17,8 @@ WORKDIR /app
 COPY ./etc/app/poetry.lock ./etc/app/pyproject.toml ./
 RUN ~/.poetry/bin/poetry install --no-ansi --no-interaction
 
-COPY ./src/remindme_app ./remindme_app
-RUN ~/.poetry/bin/poetry install --no-ansi --no-interaction
+WORKDIR /app/remindme_app
 
-CMD ["python", "manage.py", "runserver"]
+COPY ./src/remindme_app ./
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

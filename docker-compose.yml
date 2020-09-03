@@ -13,7 +13,7 @@ services:
         networks:
             - remindme
         ports:
-            - 12080:8000
+            - 10000:8000
         volumes:
             - ./src/remindme_app:/app/remindme_app
             - ./etc/app/pyproject.toml:/app/pyproject.toml
@@ -27,6 +27,14 @@ services:
             - postgres:/var/lib/postgresql/data
         ports:
             - 10432:5432
+        networks:
+            - remindme
+
+    rabbitmq:
+        image: rabbitmq:alpine
+        env_file: ./etc/rabbitmq/.env
+        ports:
+            - "10672:5672"
         networks:
             - remindme
 
