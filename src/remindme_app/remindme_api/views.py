@@ -1,11 +1,10 @@
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
-from rest_framework import viewsets, permissions, serializers as drf_serializers
-from rest_framework.decorators import action
+from rest_framework import viewsets, permissions
 
-from . import serializers
 from . import models
+from . import serializers
 
 
 class ReminderViewSet(viewsets.ModelViewSet):

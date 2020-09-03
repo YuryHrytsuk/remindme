@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 from django.core.mail import send_mail
 
 from remindme_app import celery_app, settings
-
 from . import models
 
 
