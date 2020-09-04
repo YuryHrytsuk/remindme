@@ -6,12 +6,11 @@ from . import models
 
 
 class ReminderSerializer(serializers.HyperlinkedModelSerializer):
-
-    def validate_occurs_at(self, value):
+    @staticmethod
+    def validate_occurs_at(value):
         if value < timezone.now():
-            raise serializers.ValidationError({
-                "occurs_at": "This field can't represent past"
-            })
+            raise serializers.ValidationError({"occurs_at": "Must be future date"})
+
         return value
 
     class Meta:

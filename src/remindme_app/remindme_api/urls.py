@@ -5,7 +5,7 @@ from . import views
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'reminders', views.ReminderViewSet, basename="reminder")
-router.register(r'users', views.CreateUserView, basename="user")
+router.register(r'users', views.UserView, basename="user")
 
 urlpatterns = [
     path('', include(router.urls)),
