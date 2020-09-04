@@ -1,19 +1,23 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 from rest_framework import serializers
 
 from . import models
-from . import tasks
 
 
 class ReminderSerializer(serializers.HyperlinkedModelSerializer):
+
+    def validate_occurs_at(self, value):
+        if value < timezone.now():
+            raise serializers.ValidationError({
+                "occurs_at": "This field can't represent past"
+            })
+        return value
+
     class Meta:
         model = models.Reminder
-        fields = ("header", "description", "place", "author", "cc_recipients", "created_at", "occurs_at")
-
-    def create(self, *args, **kwargs):
-        reminder = super().create(*args, **kwargs)
-        tasks.send_reminder.s(reminder.id).apply_async(eta=reminder.occurs_at)
-        return reminder
+        fields = "__all__"
+        read_only_fields = ["author", "created_at"]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,4 +35,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "username", "password", "email")
+        fields = ("username", "password", "email")

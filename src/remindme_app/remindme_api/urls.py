@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from . import views
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'reminders', views.ReminderViewSet, basename="reminder")
 router.register(r'users', views.CreateUserView, basename="user")
 

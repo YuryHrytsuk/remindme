@@ -11,6 +11,7 @@ djangorestframework = "3.11.1"
 psycopg2-binary = "^2.8.5"
 celery = "^4.4.7"
 django_celery_results = "^1.2.1"
+pytz = "^2020.1"
 
 [tool.poetry.dev-dependencies]
 

@@ -175,7 +175,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.3.0"
 
 [metadata]
-content-hash = "60f7123eee7c256c6080958a510488b0d145d039bfe632fcf05b701c7f524b17"
+content-hash = "3faf0bb1191d10574194eb185b74bce9c37365ca79ed44636cedd07d71bea70e"
 python-versions = "^3.8"
 
 [metadata.files]
