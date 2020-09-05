@@ -1,10 +1,7 @@
-from pprint import pprint
-
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from . import models
-from . import utils
 
 
 class ReminderSerializer(serializers.HyperlinkedModelSerializer):
