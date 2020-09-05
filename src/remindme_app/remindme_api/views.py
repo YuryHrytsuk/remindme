@@ -9,14 +9,14 @@ from . import tasks
 
 class ReminderViewSet(viewsets.ModelViewSet):
     model = models.Reminder
-    queryset = models.Reminder.objects.all()
     serializer_class = serializers.ReminderSerializer
+    permission_classes = [drf_permissions.IsAuthenticated]
 
     def get_queryset(self):
         if "cc" in self.request.query_params:
-            queryset = self.queryset.filter(cc_recipients__id=self.request.user.id)
+            queryset = models.Reminder.objects.filter(cc_recipients__id=self.request.user.id)
         else:
-            queryset = self.queryset.filter(author=self.request.user)
+            queryset = models.Reminder.objects.filter(author=self.request.user)
 
         queryset = queryset.order_by('occurs_at')
         return queryset

@@ -13,9 +13,8 @@ class ReminderSerializer(serializers.HyperlinkedModelSerializer):
 
         # exclude author of reminder from cc_recipients choices
         current_user = self.context['view'].request.user
-        print(current_user, flush=True)
         fields['cc_recipients'].child_relation.queryset = User.objects.exclude(id=current_user.id)
-        pprint(vars(fields['cc_recipients']))
+
         return fields
 
     class Meta:
@@ -26,7 +25,7 @@ class ReminderSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    timezone = serializers.ChoiceField(choices=utils.TIMEZONES, source="profile.timezone", default="UTC")
+    timezone = serializers.ChoiceField(choices=models.TIMEZONE_CHOICES, source="profile.timezone", default="UTC")
 
     def create(self, validated_data):
         """ Profile agnostic create """
