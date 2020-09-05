@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -6,7 +8,16 @@ from . import utils
 
 
 class ReminderSerializer(serializers.HyperlinkedModelSerializer):
-    # TODO: exclude self from cc_recipients
+    def get_fields(self, *args, **kwargs):
+        fields = super().get_fields(*args, **kwargs)
+
+        # exclude author of reminder from cc_recipients choices
+        current_user = self.context['view'].request.user
+        print(current_user, flush=True)
+        fields['cc_recipients'].child_relation.queryset = User.objects.exclude(id=current_user.id)
+        pprint(vars(fields['cc_recipients']))
+        return fields
+
     class Meta:
         model = models.Reminder
         fields = "__all__"
@@ -18,36 +29,36 @@ class UserSerializer(serializers.ModelSerializer):
     timezone = serializers.ChoiceField(choices=utils.TIMEZONES, source="profile.timezone", default="UTC")
 
     def create(self, validated_data):
-        print(validated_data)
+        """ Profile agnostic create """
         user = User(
             email=validated_data["email"],
-            username=validated_data["username"]
+            username=validated_data["username"],
         )
         user.set_password(validated_data["password"])
-        user.save()
+        user.save()  # create user with default profile
 
-        profile = models.Profile(
-            user=user,
-            timezone=validated_data["timezone"]
-        )
-        profile.save()
+        profile = user.profile
+        profile_data = validated_data["profile"]
+        profile.timezone = profile_data["timezone"]
+        user.save()  # update user profile
 
         return user
 
     def update(self, instance, validated_data):
+        """ Profile agnostic update """
         instance.username = validated_data.get("username", instance.username)
-        instance.email = validated_data.get("username", instance.email)
-        instance.password = validated_data.get("username", instance.password)
-        instance.save()
+        instance.email = validated_data.get("email", instance.email)
+        instance.set_password(validated_data.get("password", instance.password))
 
         profile = instance.profile
-        profile.timezone = validated_data.get("username", instance.profile.timezone)
-        profile.save()
+        profile_data = validated_data.get("profile", {})
+        profile.timezone = profile_data.get("timezone", instance.profile.timezone)
+        instance.save()
 
         return instance
 
     class Meta:
         model = User
+        fields = ["username", "email", "password", "timezone"]
         related_fields = ["profile"]
-        fields = ["email", "username", "password", "timezone"]
         extra_kwargs = {"password": {"write_only": True}}
