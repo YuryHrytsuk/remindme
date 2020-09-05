@@ -32,11 +32,11 @@ class UserView(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
 
     def get_permissions(self):
-        permission_classes = [drf_permissions.IsAuthenticated]
-
         if self.action == "list":
-            permission_classes.append(drf_permissions.IsAdminUser)
+            permission_classes = [drf_permissions.IsAuthenticated, drf_permissions.IsAdminUser]
+        elif self.action == "create":
+            permission_classes = [drf_permissions.AllowAny]
         else:
-            permission_classes.append(permissions.IsSelfOrAdminUser)
+            permission_classes = [drf_permissions.IsAuthenticated, permissions.IsSelfOrAdminUser]
 
         return [pc() for pc in permission_classes]
