@@ -1,9 +1,7 @@
-import celery.result
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from . import models
-from . import tasks
 
 
 class ReminderSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,28 +13,6 @@ class ReminderSerializer(serializers.HyperlinkedModelSerializer):
         fields["cc_recipients"].child_relation.queryset = User.objects.exclude(id=current_user.id)
 
         return fields
-
-    def create(self, validated_data):
-        instance = super().create(validated_data)
-
-        response = tasks.send_reminder.s(instance.id).apply_async(eta=instance.occurs_at)
-        models.ReminderTask.objects.create(task_id=response.task_id, reminder=instance)
-
-        return instance
-
-    def update(self, instance, validated_data):
-        """ Celery agnostic update """
-        if validated_data["occurs_at"] != instance.occurs_at:
-            print(f"Rescheduling celery task for {instance}")
-            reminder_task = models.ReminderTask.objects.get(reminder=instance)
-            celery_task = celery.result.AsyncResult(reminder_task.task_id)
-            celery_task.revoke()
-
-            response = tasks.send_reminder.s(instance.id).apply_async(eta=instance.occurs_at)
-            reminder_task.task_id = response.task_id
-            reminder_task.save()
-
-        return super().update(instance, validated_data)
 
     class Meta:
         model = models.Reminder

@@ -37,4 +37,4 @@ class Reminder(models.Model):
 
 class ReminderTask(models.Model):
     task_id = models.UUIDField(unique=True)
-    reminder = models.OneToOneField(Reminder, on_delete=models.CASCADE)
+    reminder = models.OneToOneField(Reminder, related_name="task", on_delete=models.CASCADE)
