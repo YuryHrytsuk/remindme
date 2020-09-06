@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='reminder',
             name='occurs_at',
-            field=models.DateTimeField(validators=[remindme_api.utils.validate_datetime_is_not_past]),
+            field=models.DateTimeField(validators=[remindme_api.validators.must_be_future_datetime]),
         ),
         migrations.CreateModel(
             name='Profile',

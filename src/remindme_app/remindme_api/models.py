@@ -33,3 +33,8 @@ class Reminder(models.Model):
     cc_recipients = models.ManyToManyField(User, related_name="cc_reminders")
     created_at = models.DateTimeField(auto_now_add=True)
     occurs_at = models.DateTimeField(validators=[validators.must_be_future_datetime])
+
+
+class ReminderTask(models.Model):
+    task_id = models.UUIDField(unique=True)
+    reminder = models.OneToOneField(Reminder, on_delete=models.CASCADE)

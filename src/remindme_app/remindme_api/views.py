@@ -4,7 +4,6 @@ from rest_framework import viewsets, permissions as drf_permissions
 from . import models
 from . import permissions
 from . import serializers
-from . import tasks
 
 
 class ReminderViewSet(viewsets.ModelViewSet):
@@ -22,8 +21,7 @@ class ReminderViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        reminder = serializer.save(author=self.request.user)
-        tasks.send_reminder.s(reminder.id).apply_async(eta=reminder.occurs_at)
+        serializer.save(author=self.request.user)
 
 
 class UserView(viewsets.ModelViewSet):
