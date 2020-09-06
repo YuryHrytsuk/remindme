@@ -25,14 +25,14 @@ class ReminderViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        """ Celery agnostic create """
+        """ Notification agnostic create """
         reminder = serializer.save(author=self.request.user)
-        response = tasks.send_reminder.s(reminder.id).apply_async(eta=reminder.occurs_at)
+        response = tasks.send_notification.s(reminder.id).apply_async(eta=reminder.occurs_at)
         reminder_task = models.ReminderTask(task_id=response.task_id, reminder=reminder)
         reminder_task.save()
 
     def perform_update(self, serializer):
-        """ Celery agnostic update """
+        """ Notification agnostic update """
         if "occurs_at" not in serializer.initial_data:  # no update for occurs_at - skipping
             return super().perform_update(serializer)
 
@@ -49,7 +49,7 @@ class ReminderViewSet(viewsets.ModelViewSet):
 
         celery_task.revoke()  # revoke old task
 
-        response = tasks.send_reminder.s(reminder.id).apply_async(eta=occurs_at)  # schedule task with update eta
+        response = tasks.send_notification.s(reminder.id).apply_async(eta=occurs_at)  # schedule task with update eta
         reminder.task.task_id = response.task_id
         reminder.task.save()
 
