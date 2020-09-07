@@ -16,7 +16,9 @@ services:
         ports:
             - 10000:8000
         volumes:
-            - ./src/remindme_app:/app/remindme_app
+            - ./src/remindme_app/remindme_api:/app/remindme_app/remindme_api
+            - ./src/remindme_app/remindme_app:/app/remindme_app/remindme_app
+            - ./etc/app/entrypoint.sh:/app/remindme_app/entrypoint.sh
             - ./etc/app/pyproject.toml:/app/pyproject.toml
             - ./etc/app/poetry.lock:/app/poetry.lock
 
@@ -46,7 +48,9 @@ services:
         networks:
             - remindme
         volumes:
-            - ./src/remindme_app:/app/remindme_app
+            - ./src/remindme_app/remindme_api:/app/remindme_app/remindme_api
+            - ./src/remindme_app/remindme_app:/app/remindme_app/remindme_app
+            - ./etc/app/entrypoint.sh:/app/remindme_app/entrypoint.sh
             - ./etc/app/pyproject.toml:/app/pyproject.toml
             - ./etc/app/poetry.lock:/app/poetry.lock
 

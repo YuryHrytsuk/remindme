@@ -19,6 +19,7 @@ RUN ~/.poetry/bin/poetry install --no-ansi --no-interaction
 
 WORKDIR /app/remindme_app
 
-COPY ./src/remindme_app ./
+COPY ./etc/app/entrypoint.sh ./
+COPY ./src/remindme_app/remind ./
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["./entrypoint.sh"]
