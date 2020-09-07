@@ -66,12 +66,27 @@ class ReminderViewSet(viewsets.ModelViewSet):
 
 class UserView(viewsets.ModelViewSet):
     model = User
-    queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+    def get_queryset(self):
+        """ Manually handling permission for list action """
+
+        if self.action != "list":
+            return User.objects.all()
+
+        if self.request.user.is_staff:
+            queryset = User.objects.all()
+        elif self.request.user.is_anonymous:
+            queryset = User.objects.none()
+        else:
+            queryset = User.objects.filter(id=self.request.user.id)
+
+        return queryset
 
     def get_permissions(self):
         if self.action == "list":
-            permission_classes = [drf_permissions.IsAuthenticated, drf_permissions.IsAdminUser]
+            # AllowAny to have a sign up form. We limit user access by `get_queryset`
+            permission_classes = [drf_permissions.AllowAny]
         elif self.action == "create":
             permission_classes = [drf_permissions.AllowAny]
         else:
