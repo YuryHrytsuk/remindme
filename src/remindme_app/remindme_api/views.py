@@ -36,7 +36,9 @@ class ReminderViewSet(viewsets.ModelViewSet):
         if "occurs_at" not in serializer.initial_data:  # no update for occurs_at - skipping
             return super().perform_update(serializer)
 
-        occurs_at = timezone.make_aware(dateparse.parse_datetime(serializer.initial_data["occurs_at"]))
+        occurs_at = dateparse.parse_datetime(serializer.initial_data["occurs_at"])
+        if timezone.is_naive(occurs_at):
+            occurs_at = timezone.make_aware(occurs_at)
         reminder = self.get_object()
 
         if occurs_at == reminder.occurs_at:  # new occurs_at is equal to old value - skipping

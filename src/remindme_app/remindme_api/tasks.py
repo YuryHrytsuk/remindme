@@ -2,6 +2,7 @@ import logging
 import socket
 from smtplib import SMTPException
 
+import celery.exceptions
 from django.core.mail import send_mail
 
 from remindme_app import celery_app, settings
@@ -24,8 +25,8 @@ def send_notification(self, reminder_id):
         )
     except (SMTPException, ConnectionError, socket.gaierror) as e:
         try:
-            self.retry(exc=e, countdown=2 ** self.request.retries)
-        except Exception:
+            self.retry(countdown=2 ** self.request.retries)
+        except celery.exceptions.MaxRetriesExceededError:
             logger.warning(f"Failed to send notification for {reminder=}")
             raise
     else:
